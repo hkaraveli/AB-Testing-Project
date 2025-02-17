@@ -20,7 +20,7 @@ This project analyzes the impact of **Maximum Bidding vs. Average Bidding** stra
 ## 🛠 Technologies Used
 - **Python Libraries**: pandas, numpy, seaborn, statsmodels, scipy, matplotlib
 - **Statistical Methods**: t-tests, chi-square test, confidence intervals
-- **Tools**: Jupyter Notebook
+- **Tools**: PyCharm 2024
 
 ## 🚀 How to Run
 1. Clone the repository:
