@@ -23,7 +23,7 @@ This project analyzes the impact of **Maximum Bidding vs. Average Bidding** stra
 - **Tools**: PyCharm 2024
 
 ## 🚀 How to Run
-1. Clone the repository:
-   ```sh
-   git clone https://github.com/hkaraveli/AB-Testing-Project.git
-   cd AB-Testing-Project
+### 1. Clone the repository:
+```sh
+git clone https://github.com/hkaraveli/AB-Testing-Project.git
+cd AB-Testing-Project
