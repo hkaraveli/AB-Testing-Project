@@ -18,9 +18,9 @@ This project analyzes the impact of **Maximum Bidding vs. Average Bidding** stra
    - Interpreting p-values to decide whether Maximum Bidding or Average Bidding performs better.
 
 ## 🛠 Technologies Used
-- **Python**: `pandas`, `numpy`, `matplotlib`, `seaborn`, `scipy`, `statsmodels`
-- **Statistical Methods**: `t-tests`, `chi-square test`, `confidence intervals`
-- **Jupyter Notebook**: For analysis and visualization
+- **Python Libraries**: pandas, numpy, seaborn, statsmodels, scipy, matplotlib
+- **Statistical Methods**: t-tests, chi-square test, confidence intervals
+- **Tools**: Jupyter Notebook
 
 ## 🚀 How to Run
 1. Clone the repository:
