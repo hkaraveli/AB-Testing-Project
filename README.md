@@ -15,8 +15,8 @@ This project analyzes the impact of **Maximum Bidding vs. Average Bidding** stra
 3. **Statistical Hypothesis Testing**:
    - Using **t-tests** and **chi-square tests** to compare group performance.
 4. **Decision Making**:
-   - Interpreting p-values to decide whether Maximum Bidding or Average Bidding performs better.
-
+   - Interpreting p-values to determine which bidding strategy (Maximum Bidding or Average Bidding) is more effective.
+   - 
 ## 🛠 Technologies Used
 - **Python Libraries**: pandas, numpy, seaborn, statsmodels, scipy, matplotlib
 - **Statistical Methods**: t-tests, chi-square test, confidence intervals
@@ -25,6 +25,11 @@ This project analyzes the impact of **Maximum Bidding vs. Average Bidding** stra
 - `tips`: Contains restaurant bills, tips, and customer information.  
 - `titanic`: Passenger survival data from the Titanic disaster.  
 - `diabetes.csv`: Information on diabetic and non-diabetic patients.
+
+## 📊 Results & Findings
+- Maximum Bidding resulted in a **higher average conversion rate**.
+- Statistical tests showed **no significant difference** between groups. (p > 0.05)
+- Further experiments with a larger dataset are needed for stronger conclusions.
 
 ## 🚀 How to Run
 ### 1. Clone the repository:
