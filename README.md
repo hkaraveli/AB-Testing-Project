@@ -21,6 +21,10 @@ This project analyzes the impact of **Maximum Bidding vs. Average Bidding** stra
 - **Python Libraries**: pandas, numpy, seaborn, statsmodels, scipy, matplotlib
 - **Statistical Methods**: t-tests, chi-square test, confidence intervals
 - **Tools**: PyCharm 2024
+- **Dataset Used:**  
+- `tips`: Contains restaurant bills, tips, and customer information.  
+- `titanic`: Passenger survival data from the Titanic disaster.  
+- `diabetes.csv`: Information on diabetic and non-diabetic patients.
 
 ## 🚀 How to Run
 ### 1. Clone the repository:
