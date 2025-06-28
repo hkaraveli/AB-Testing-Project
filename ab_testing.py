@@ -84,9 +84,12 @@ plt.ylabel("Mean Purchase")
 plt.savefig("figures/mean_purchase.png", dpi=120)
 plt.close()
 
+# --- Show Group Means ---
+print("\nGroup Means (Purchases):")
+print(means)
+
 # --- Final Recommendation ---
 if p < 0.05:
     print("Statistically significant difference found between bidding methods!")
 else:
     print("No statistically significant difference found. Consider other business metrics or longer test duration.")
-
