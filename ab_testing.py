@@ -1,148 +1,92 @@
-######################################################
-# Basic Statistical Concepts
-######################################################
+"""
+A/B Test Analysis: Comparing Maximum vs. Average Bidding
+Author: Halis Karaveli, 2025
 
-import itertools
-import numpy as np
+This script demonstrates a complete A/B testing workflow using simulated data for demonstration purposes.
+Original dataset used in MIUUL Bootcamp is NOT shared here due to copyright and educational restrictions.
+You can run the script with your own data in the format expected or rely on simulated data by default.
+"""
+
+import os
 import pandas as pd
+import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
-# !pip install statsmodels
-import statsmodels.stats.api as sms
-from scipy.stats import ttest_1samp, shapiro, levene, ttest_ind, mannwhitneyu, \
-    pearsonr, spearmanr, kendalltau, f_oneway, kruskal
-from statsmodels.stats.proportion import proportions_ztest
+from scipy.stats import shapiro, levene, ttest_ind, mannwhitneyu
 
-pd.set_option('display.max_columns', None)
-pd.set_option('display.max_rows', 10)
-pd.set_option('display.float_format', lambda x: '%.5f' % x)
+os.makedirs("figures", exist_ok=True)
 
-############################
-# Sampling
-############################
+# --- Load Data ---
+try:
+    df_control = pd.read_excel("ab_testing.xlsx", sheet_name="Control Group")
+    df_test = pd.read_excel("ab_testing.xlsx", sheet_name="Test Group")
+except FileNotFoundError:
+    # Simulate data for demonstration if not available
+    np.random.seed(42)
+    df_control = pd.DataFrame({
+        "impression": np.random.randint(5000, 20000, 40),
+        "Click": np.random.randint(200, 900, 40),
+        "Purchase": np.random.normal(35, 5, 40).astype(int),
+        "Earning": np.random.normal(600, 80, 40)
+    })
+    df_test = pd.DataFrame({
+        "impression": np.random.randint(5000, 20000, 40),
+        "Click": np.random.randint(200, 900, 40),
+        "Purchase": np.random.normal(36, 5, 40).astype(int),
+        "Earning": np.random.normal(605, 75, 40)
+    })
 
-population = np.random.randint(0, 80, 10000)
-population.mean()
+df_control["group"] = "control"
+df_test["group"] = "test"
+df = pd.concat([df_control, df_test], ignore_index=True)
 
-np.random.seed(115)
+# --- Exploratory Visualization ---
+plt.figure(figsize=(7, 4))
+sns.histplot(df, x="Purchase", hue="group", bins=20, kde=True, element="step")
+plt.title("Purchase Distribution by Group")
+plt.savefig("figures/purchase_distribution.png", dpi=120)
+plt.close()
 
-sample = np.random.choice(a=population, size=100)
-sample.mean()
+# --- Assumption Checks ---
+def check_normality(data, group):
+    stat, p = shapiro(data)
+    print(f"Shapiro–Wilk for {group}: p={p:.3f}")
+    return p > 0.05
 
-np.random.seed(10)
-sample1 = np.random.choice(a=population, size=100)
-sample2 = np.random.choice(a=population, size=100)
-sample3 = np.random.choice(a=population, size=100)
-sample4 = np.random.choice(a=population, size=100)
-sample5 = np.random.choice(a=population, size=100)
-sample6 = np.random.choice(a=population, size=100)
-sample7 = np.random.choice(a=population, size=100)
-sample8 = np.random.choice(a=population, size=100)
-sample9 = np.random.choice(a=population, size=100)
-sample10 = np.random.choice(a=population, size=100)
+def check_variance(x, y):
+    stat, p = levene(x, y)
+    print(f"Levene’s Test: p={p:.3f}")
+    return p > 0.05
 
-(sample1.mean() + sample2.mean() + sample3.mean() + sample4.mean() + sample5.mean()
- + sample6.mean() + sample7.mean() + sample8.mean() + sample9.mean() + sample10.mean()) / 10
+normal_control = check_normality(df.loc[df.group == "control", "Purchase"], "Control")
+normal_test = check_normality(df.loc[df.group == "test", "Purchase"], "Test")
+variance = check_variance(df.loc[df.group == "control", "Purchase"], df.loc[df.group == "test", "Purchase"])
 
-############################
-# Descriptive Statistics
-############################
+# --- Hypothesis Testing ---
+if normal_control and normal_test and variance:
+    stat, p = ttest_ind(df.loc[df.group == "control", "Purchase"],
+                        df.loc[df.group == "test", "Purchase"],
+                        equal_var=True)
+    test_used = "Independent Two-Sample T-Test"
+else:
+    stat, p = mannwhitneyu(df.loc[df.group == "control", "Purchase"],
+                           df.loc[df.group == "test", "Purchase"])
+    test_used = "Mann–Whitney U Test"
 
-df = sns.load_dataset("tips")
-df.describe().T
+print(f"\n{test_used} p-value: {p:.3f}")
 
-############################
-# Confidence Intervals
-############################
+# --- KPI Visualization ---
+means = df.groupby("group")["Purchase"].mean()
+plt.figure(figsize=(6, 4))
+sns.barplot(x=means.index, y=means.values)
+plt.title("Average Purchases by Group")
+plt.ylabel("Mean Purchase")
+plt.savefig("figures/mean_purchase.png", dpi=120)
+plt.close()
 
-df = sns.load_dataset("tips")
-df.describe().T
-df.head()
+# --- Final Recommendation ---
+if p < 0.05:
+    print("Statistically significant difference found between bidding methods!")
+else:
+    print("No statistically significant difference found. Consider other business metrics or longer test duration.")
 
-sms.DescrStatsW(df["total_bill"]).tconfint_mean()
-sms.DescrStatsW(df["tip"]).tconfint_mean()
-
-df = sns.load_dataset("titanic")
-df.describe().T
-sms.DescrStatsW(df["age"].dropna()).tconfint_mean()
-sms.DescrStatsW(df["fare"].dropna()).tconfint_mean()
-
-######################################################
-# Correlation
-######################################################
-
-df = sns.load_dataset('tips')
-df.head()
-
-df["total_bill"] = df["total_bill"] - df["tip"]
-
-df.plot.scatter("tip", "total_bill")
-plt.show()
-
-df["tip"].corr(df["total_bill"])
-
-######################################################
-# A/B Testing (Independent Two-Sample T-Test)
-######################################################
-
-# 1. Define Hypotheses
-# 2. Assumption Checks
-#   - 1. Normality Assumption
-#   - 2. Homogeneity of Variance
-# 3. Applying the Hypothesis Test
-#   - 1. If assumptions are met, apply independent two-sample t-test (parametric test)
-#   - 2. If assumptions are not met, apply the Mann-Whitney U test (non-parametric test)
-# 4. Interpret results based on p-value
-
-############################
-# Application 1: Is There a Statistically Significant Difference Between Smokers and Non-Smokers in Terms of Bill Amounts?
-############################
-
-df = sns.load_dataset("tips")
-df.head()
-
-df.groupby("smoker").agg({"total_bill": "mean"})
-
-############################
-# 1. Define Hypotheses
-############################
-
-# H0: M1 = M2 (No significant difference)
-# H1: M1 != M2 (There is a significant difference)
-
-############################
-# 2. Assumption Checks
-############################
-
-# Normality Assumption
-# H0: Data follows a normal distribution
-# H1: Data does not follow a normal distribution
-
-test_stat, pvalue = shapiro(df.loc[df["smoker"] == "Yes", "total_bill"])
-print('Test Stat = %.4f, p-value = %.4f' % (test_stat, pvalue))
-
-test_stat, pvalue = shapiro(df.loc[df["smoker"] == "No", "total_bill"])
-print('Test Stat = %.4f, p-value = %.4f' % (test_stat, pvalue))
-
-# Homogeneity of Variance
-# H0: Variances are homogeneous
-# H1: Variances are not homogeneous
-
-test_stat, pvalue = levene(df.loc[df["smoker"] == "Yes", "total_bill"],
-                           df.loc[df["smoker"] == "No", "total_bill"])
-print('Test Stat = %.4f, p-value = %.4f' % (test_stat, pvalue))
-
-############################
-# 3. Apply the Hypothesis Test
-############################
-
-# 1.1 If assumptions are met, apply independent two-sample t-test (parametric test)
-test_stat, pvalue = ttest_ind(df.loc[df["smoker"] == "Yes", "total_bill"],
-                              df.loc[df["smoker"] == "No", "total_bill"],
-                              equal_var=True)
-print('Test Stat = %.4f, p-value = %.4f' % (test_stat, pvalue))
-
-# 1.2 If assumptions are not met, apply the Mann-Whitney U test (non-parametric test)
-test_stat, pvalue = mannwhitneyu(df.loc[df["smoker"] == "Yes", "total_bill"],
-                                 df.loc[df["smoker"] == "No", "total_bill"])
-print('Test Stat = %.4f, p-value = %.4f' % (test_stat, pvalue))
