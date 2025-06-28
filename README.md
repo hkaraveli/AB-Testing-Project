@@ -1,38 +1,82 @@
-# AB-Testing-Project
+# A/B Test Analysis: Comparing Bidding Strategies (Maximum vs. Average)
 
-## 📌 Project Overview
-This project analyzes the impact of **Maximum Bidding vs. Average Bidding** strategies in **A/B testing** to optimize conversion rates. It uses statistical hypothesis testing to determine which strategy is more effective.
+**Author:** Halis Karaveli  
+**Date:** 2025
 
-## 📊 Dataset
-- The dataset includes **user interactions and conversion data** collected from an online platform.
-- Key columns: `user_id`, `group (control/test)`, `clicks`, `conversions`, `impressions`.
+---
 
-## 🔬 Methodology
-1. **Data Cleaning & Preprocessing**:
-   - Handling missing values, duplicates, and data type conversions.
-2. **Exploratory Data Analysis (EDA)**:
-   - Visualizing key metrics (e.g., conversion rates per group).
-3. **Statistical Hypothesis Testing**:
-   - Using **t-tests** and **chi-square tests** to compare group performance.
-4. **Decision Making**:
-   - Interpreting p-values to determine which bidding strategy (Maximum Bidding or Average Bidding) is more effective.
-   - 
-## 🛠 Technologies Used
-- **Python Libraries**: pandas, numpy, seaborn, statsmodels, scipy, matplotlib
-- **Statistical Methods**: t-tests, chi-square test, confidence intervals
-- **Tools**: PyCharm 2024
-- **Dataset Used:**  
-- `tips`: Contains restaurant bills, tips, and customer information.  
-- `titanic`: Passenger survival data from the Titanic disaster.  
-- `diabetes.csv`: Information on diabetic and non-diabetic patients.
+## Project Overview
 
-## 📊 Results & Findings
-- Maximum Bidding resulted in a **higher average conversion rate**.
-- Statistical tests showed **no significant difference** between groups. (p > 0.05)
-- Further experiments with a larger dataset are needed for stronger conclusions.
+This project analyzes the impact of two digital marketing bidding strategies—Maximum Bidding and Average Bidding—on purchase conversion rates using A/B testing.  
+The analysis is based on anonymized e-commerce data and demonstrates a full statistical workflow:  
+- Data preparation
+- Assumption checks
+- Parametric/non-parametric hypothesis testing
+- Visualization
+- Practical recommendations
 
-## 🚀 How to Run
-### 1. Clone the repository:
-```sh
-git clone https://github.com/hkaraveli/AB-Testing-Project.git
-cd AB-Testing-Project
+**Disclaimer:**  
+This repository is based on an educational exercise from MIUUL Data Science Bootcamp.  
+All code, analysis, and documentation are original, written by Halis Karaveli, and are provided for portfolio and demonstration purposes only.  
+*No proprietary or paid data is shared in this repository. If you need data, you may simulate similar features or request access from the original provider.*
+
+---
+
+## Business Problem
+
+A retail client is evaluating a new bidding strategy ("Average Bidding") introduced alongside the existing "Maximum Bidding" method. The goal is to determine if the new strategy leads to statistically significant improvements in purchase conversion rates.
+
+---
+
+## Dataset
+
+- **impression**: Number of ad impressions
+- **Click**: Number of ad clicks
+- **Purchase**: Number of purchases following ad clicks
+- **Earning**: Revenue earned from purchases
+
+*Data was provided for educational use only. No original dataset is distributed here.*
+
+---
+
+## Methods
+
+- Data exploration and visualization
+- Independent two-sample t-test and Mann–Whitney U test
+- Test of assumptions (Shapiro–Wilk, Levene)
+- KPI visualization using Seaborn & Matplotlib
+- Data-driven recommendations
+
+---
+
+## Example Results & Visualizations
+
+**1. Distribution of Purchases per Group:**  
+![Purchase Distribution](figures/purchase_distribution.png)
+
+**2. Statistical Test Results:**  
+| Metric           | Control Group | Test Group |
+|------------------|--------------|------------|
+| Purchase Mean    |  X.XX        |   X.XX     |
+| t-test p-value   |   0.349      |            |
+
+*No statistically significant difference was found between bidding strategies.*
+
+---
+
+## Usage
+
+1. Clone the repository.
+2. Place your data in the `datasets/` directory or simulate your own sample data.
+3. Run:
+    ```bash
+    python ab_test_analysis.py
+    ```
+
+---
+
+## Author
+
+Halis Karaveli, 2025
+
+---
